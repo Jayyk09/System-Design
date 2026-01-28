@@ -59,7 +59,7 @@ Player:
 
 This is a high level implementation detail of how the Connect4 should work. There are some design choice I have made and I will explain them below:
 
-1. I have used enums in GameState. The other option is to use multiple boolean values like in_progress = true, has_won = true, is_draw = true. The problem with this approach is that the three states are very tightly coupled, so at every move there is a need to update all of them. 
+1 - I have used enums in GameState. The other option is to use multiple boolean values like in_progress = true, has_won = true, is_draw = true. The problem with this approach is that the three states are very tightly coupled, so at every move there is a need to update all of them. 
 ```
 # the game is won, we would need to update every single value for synchronization
 {
@@ -69,4 +69,12 @@ This is a high level implementation detail of how the Connect4 should work. Ther
 }
 ```
 
-2. I used enums for CellState - The Board only cares about which player owns a cell, not who the player is. CellState is a lightweight representation of ownership. Player simply carries which CellState it corresponds to
+2 -  I used enums for CellState - The Board only cares about which player owns a cell, not who the player is. CellState is a lightweight representation of ownership. Player simply carries which CellState it corresponds to.
+
+
+## Questions I had to think before answering in it 
+
+1. How does the tracking of wins work? Do we run it for the whole board and try to figure out what the winner is? The correct approach is to just test the correspoding cells of the last dropped disk. There are three directions and 4 rows to check, thus it's a O(1) complexity. 
+
+2. Where does the logic live - Board or Game? If it lives in Board, then Board encapsulates it's own logic and whenever the winner is decided it sends an event to the Game, and the Game just reacts. In this case, Board is no longer just tracking state.
+I would lean towards Game keeping the logic as Game owns the rules and it helps with implementing different versions - what if we want Connect5 later?
