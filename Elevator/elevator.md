@@ -27,21 +27,31 @@ Floor:
 
 ### Class Design and Schemas
 
+Elevator class take requests and handle which floor to go to next. The types seem to be direction, current floor and set of Requets. For now, i'd keep requests to a set of floor numbers. When somebody requests it, it gets added to the step and gets visited till hightest req is needed.
+
+How would the function step would look like? check which direction we're going and check if there is a number in that direction. if yes keep going, else stop and remove it from the list.  stop there, and then remove it from the requests and then processe the next one?
+
+if any other requests in that direction, then keep going else reverse and change direction. if no requests
+
 ```py
 class Elevator:
-    currentFloor: int 
-    direction: Direction 
-    requests: Set<Request>
+    current_floor: int 
+    requests: Set()
+    direction: enum (up, down, idle) 
 
-class Direction(enum):
-    UP: 'UP'
-    DOWN: 'DOWN'
-    STATIONARY: 'STATIONARY'
+    step():
+        if requests.contains(current_floor):
+            requests.remove(current_floor)
+
+        
+        if dir == up and max(request > current_floor:
+            keep going. increment current_floor
+        else:
+            dir =  down and current_floor -= 1
+
+        if dir == down and min_requests < current_floor:
+            keep going. decrement current floor
+        else:
+            dir = up and current_floor += 1
+
 ```
-
-```py
-class ElevatorOrchestrator:
-    elevators: List[Elevator]
-```
-
-Something that I did not initially think about but is important is thinking type of Request. It can just be an intger with type up/down but it really is not ideal. Let's say multiple people want to get to go to floor 7 so the elevator stops at floor 7 and removes it from the set. It works, but real life can't be that simple, can it? 
